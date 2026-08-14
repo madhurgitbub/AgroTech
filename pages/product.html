@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Detail – AgroTECH</title>
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/home.css">
+  <style>
+    .detail-layout {
+      max-width: 1100px;
+      margin: 2rem auto;
+      padding: 0 1.5rem 3rem;
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 2rem;
+      align-items: start;
+    }
+    @media(max-width:900px){ .detail-layout{ grid-template-columns:1fr; } }
+
+    /* Image Gallery */
+    .img-main {
+      width: 100%;
+      height: 360px;
+      object-fit: cover;
+      border-radius: var(--radius-xl);
+      background: var(--green-50);
+      display: block;
+    }
+
+    /* Info Card */
+    .info-card {
+      background: white;
+      border-radius: var(--radius-xl);
+      padding: 1.75rem;
+      border: 1px solid var(--green-100);
+      box-shadow: var(--shadow-md);
+      position: sticky;
+      top: 80px;
+    }
+
+    .info-card .cat-badge {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--green-600);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .info-card h1 {
+      font-size: 1.5rem;
+      color: var(--gray-900);
+      margin-bottom: 6px;
+      line-height: 1.25;
+    }
+
+    .rating-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 1.25rem;
+      font-size: 0.875rem;
+    }
+
+    .rating-stars { color: #ffc107; }
+    .rating-count { color: var(--gray-400); }
+
+    .price-block {
+      background: var(--green-50);
+      border: 2px solid var(--green-200);
+      border-radius: var(--radius-lg);
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .price-main {
+      font-family: 'Sora', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--green-700);
+      line-height: 1;
+    }
+
+    .price-unit {
+      font-size: 0.85rem;
+      color: var(--gray-400);
+      margin-top: 2px;
+    }
+
+    .availability {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--green-700);
+      margin-top: 8px;
+    }
+
+    .avail-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--green-500);
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%,100%{ opacity:1; } 50%{ opacity:0.4; }
+    }
+
+    .qty-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 1rem;
+    }
+
+    .qty-row label { font-size: 0.875rem; font-weight: 600; color: var(--gray-700); }
+
+    .qty-control {
+      display: flex;
+      align-items: center;
+      border: 1.5px solid var(--gray-300);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+
+    .qty-control button {
+      width: 36px; height: 36px;
+      background: var(--gray-50);
+      border: none;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: var(--transition);
+      color: var(--gray-600);
+    }
+
+    .qty-control button:hover { background: var(--green-100); color: var(--green-700); }
+
+    .qty-control input {
+      width: 50px;
+      text-align: center;
+      border: none;
+      border-left: 1.5px solid var(--gray-300);
+      border-right: 1.5px solid var(--gray-300);
+      height: 36px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--gray-800);
+    }
+
+    .action-btns { display: flex; flex-direction: column; gap: 10px; }
+
+    /* Description section */
+    .desc-section {
+      background: white;
+      border-radius: var(--radius-xl);
+      padding: 1.75rem;
+      border: 1px solid var(--green-100);
+      box-shadow: var(--shadow-sm);
+      margin-top: 1.5rem;
+    }
+
+    .desc-section h3 {
+      font-size: 1rem;
+      color: var(--green-900);
+      margin-bottom: 1rem;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--green-100);
+    }
+
+    .desc-section p {
+      font-size: 0.9rem;
+      color: var(--gray-600);
+      line-height: 1.8;
+    }
+
+    .spec-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 1rem;
+    }
+
+    .spec-item {
+      background: var(--green-50);
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      border: 1px solid var(--green-100);
+    }
+
+    .spec-label { font-size: 0.72rem; color: var(--gray-400); text-transform: uppercase; font-weight: 700; letter-spacing: 0.4px; }
+    .spec-value { font-size: 0.9rem; font-weight: 600; color: var(--gray-800); margin-top: 2px; }
+
+    /* Seller card */
+    .seller-card {
+      background: white;
+      border-radius: var(--radius-xl);
+      padding: 1.75rem;
+      border: 1px solid var(--green-100);
+      box-shadow: var(--shadow-sm);
+      margin-top: 1.5rem;
+    }
+
+    .seller-card h3 { font-size: 1rem; color: var(--green-900); margin-bottom: 1rem; }
+
+    .seller-info {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .seller-avatar {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--green-600), var(--green-400));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: white;
+      font-weight: 700;
+      font-family: 'Sora', sans-serif;
+      flex-shrink: 0;
+    }
+
+    .seller-name { font-weight: 700; color: var(--gray-800); font-size: 0.95rem; }
+    .seller-meta { font-size: 0.78rem; color: var(--gray-400); margin-top: 2px; }
+
+    /* Related Products */
+    .related-section {
+      margin-top: 2.5rem;
+    }
+
+    .related-section h2 { font-size: 1.2rem; color: var(--green-900); margin-bottom: 1.25rem; }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar" id="navbar"></nav>
+
+  <div class="detail-layout">
+
+    <!-- Left Column -->
+    <div>
+      <div class="breadcrumb">
+        <a href="home.html">Home</a>
+        <span>/</span>
+        <a href="search.html">Products</a>
+        <span>/</span>
+        <span id="breadcrumbName">Loading…</span>
+      </div>
+
+      <img id="mainImg" class="img-main" src="" alt="Product Image" style="margin-top:1rem"
+           onerror="this.src='https://via.placeholder.com/800x360/e8f5e9/2e7d32?text=AgroTECH'">
+
+      <!-- Description -->
+      <div class="desc-section">
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="switchTab('desc', this)">📋 Description</button>
+          <button class="tab-btn" onclick="switchTab('specs', this)">⚙️ Specifications</button>
+          <button class="tab-btn" onclick="switchTab('reviews', this)">⭐ Reviews</button>
+        </div>
+
+        <div id="tab-desc">
+          <p id="productDesc">Loading…</p>
+        </div>
+
+        <div id="tab-specs" style="display:none">
+          <div class="spec-grid" id="specGrid"></div>
+        </div>
+
+        <div id="tab-reviews" style="display:none">
+          <div id="reviewsContainer"></div>
+
+          <!-- Leave a review -->
+          <div style="margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--gray-100)">
+            <h4 style="font-size:0.9rem;color:var(--green-900);margin-bottom:12px">Leave a Review</h4>
+            <div style="display:flex;gap:4px;margin-bottom:10px" id="starPicker">
+              <span style="font-size:1.6rem;cursor:pointer;color:var(--gray-300)" onclick="setRating(1)" onmouseover="hoverRating(1)" onmouseout="resetHover()">★</span>
+              <span style="font-size:1.6rem;cursor:pointer;color:var(--gray-300)" onclick="setRating(2)" onmouseover="hoverRating(2)" onmouseout="resetHover()">★</span>
+              <span style="font-size:1.6rem;cursor:pointer;color:var(--gray-300)" onclick="setRating(3)" onmouseover="hoverRating(3)" onmouseout="resetHover()">★</span>
+              <span style="font-size:1.6rem;cursor:pointer;color:var(--gray-300)" onclick="setRating(4)" onmouseover="hoverRating(4)" onmouseout="resetHover()">★</span>
+              <span style="font-size:1.6rem;cursor:pointer;color:var(--gray-300)" onclick="setRating(5)" onmouseover="hoverRating(5)" onmouseout="resetHover()">★</span>
+            </div>
+            <textarea id="reviewText" class="form-textarea" rows="3" placeholder="Share your experience with this product…" style="margin-bottom:10px"></textarea>
+            <button class="btn btn-primary btn-sm" onclick="submitReview()">Submit Review</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seller Info -->
+      <div class="seller-card">
+        <h3>👨‍🌾 About the Seller</h3>
+        <div class="seller-info">
+          <div class="seller-avatar" id="sellerAvatar">A</div>
+          <div>
+            <div class="seller-name" id="sellerName">AgroTECH Verified Seller</div>
+            <div class="seller-meta">⭐ 4.8 · 200+ successful rentals · Member since 2023</div>
+            <div class="seller-meta" id="sellerLocation" style="margin-top:2px">📍 —</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Related -->
+      <div class="related-section">
+        <h2>🔍 Similar Products</h2>
+        <div class="product-grid" id="relatedGrid"></div>
+      </div>
+    </div>
+
+    <!-- Right Column: Info Card -->
+    <div>
+      <div class="info-card">
+        <div class="cat-badge" id="catBadge">🚜 machinery</div>
+        <h1 id="productName">Loading…</h1>
+        <div class="rating-row">
+          <span class="rating-stars" id="ratingStars">★★★★★</span>
+          <span id="ratingVal" style="font-weight:700;color:var(--gray-700)">4.5</span>
+          <span class="rating-count" id="ratingCount">(0 reviews)</span>
+        </div>
+
+        <div class="price-block">
+          <div class="price-main" id="productPrice">₹—</div>
+          <div class="price-unit" id="productUnit">per acre</div>
+          <div class="availability">
+            <div class="avail-dot"></div>
+            <span>Available Now</span>
+          </div>
+        </div>
+
+        <div class="qty-row">
+          <label>Quantity:</label>
+          <div class="qty-control">
+            <button onclick="changeQty(-1)">−</button>
+            <input type="number" id="qtyInput" value="1" min="1" max="99">
+            <button onclick="changeQty(1)">+</button>
+          </div>
+        </div>
+
+        <div style="font-size:0.8rem;color:var(--gray-400);margin-bottom:1rem;display:flex;justify-content:space-between">
+          <span>📍 <span id="productLocation">—</span></span>
+          <span>Total: <strong id="totalCalc" style="color:var(--green-700)">₹—</strong></span>
+        </div>
+
+        <div class="action-btns">
+          <button class="btn btn-primary btn-lg" onclick="goRent()">🛒 Rent / Buy Now</button>
+          <button class="btn btn-secondary btn-lg" onclick="addToWishlist()">🤍 Save to Wishlist</button>
+        </div>
+
+        <div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--gray-100)">
+          <div style="font-size:0.8rem;color:var(--gray-400);display:flex;flex-direction:column;gap:6px">
+            <span>🔒 Secure payment guaranteed</span>
+            <span>↩️ Easy cancellation within 24 hours</span>
+            <span>📞 24/7 support available</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="global-toast" class="toast"></div>
+  <script src="../js/api.js"></script><script src="../js/global.js"></script>
+  <script>
+    let product = null;
+    let selectedRating = 0;
+    const sampleReviews = [
+      { name: 'Ramesh Patel', rating: 5, text: 'Excellent service! Machine was delivered on time and in perfect condition. Will rent again.', date: '2025-08-15' },
+      { name: 'Suresh Kumar', rating: 4, text: 'Good quality product. Price is fair for the service. Recommended for small farms.', date: '2025-07-28' },
+      { name: 'Geeta Devi', rating: 5, text: 'Bahut achha product hai. AgroTech se lena sahi decision tha. Thanks!', date: '2025-07-10' }
+    ];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      requireAuth();
+      renderNavbar('');
+      loadProduct();
+    });
+
+    function loadProduct() {
+      const raw = sessionStorage.getItem('selected_product');
+      product = raw ? JSON.parse(raw) : AgroData.products[0];
+      renderDetail();
+      renderRelated();
+      document.getElementById('breadcrumbName').textContent = product.name;
+    }
+
+    function renderDetail() {
+      document.title = product.name + ' – AgroTECH';
+      document.getElementById('mainImg').src = product.image;
+      document.getElementById('mainImg').alt = product.name;
+      document.getElementById('catBadge').textContent = getCategoryIcon(product.category) + ' ' + product.category;
+      document.getElementById('productName').textContent = product.name;
+      document.getElementById('productDesc').textContent = product.description;
+      document.getElementById('productPrice').textContent = formatPrice(product.price);
+      document.getElementById('productUnit').textContent = product.unit;
+      document.getElementById('productLocation').textContent = product.location;
+      document.getElementById('ratingVal').textContent = product.rating;
+      document.getElementById('ratingCount').textContent = `(${product.reviews} reviews)`;
+      document.getElementById('ratingStars').textContent = '★'.repeat(Math.round(product.rating)) + '☆'.repeat(5 - Math.round(product.rating));
+
+      const initials = product.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+      document.getElementById('sellerAvatar').textContent = initials;
+      document.getElementById('sellerName').textContent = 'Verified Farmer – ' + product.location;
+      document.getElementById('sellerLocation').textContent = '📍 ' + product.location;
+
+      // Specs
+      document.getElementById('specGrid').innerHTML = `
+        <div class="spec-item"><div class="spec-label">Category</div><div class="spec-value">${product.category}</div></div>
+        <div class="spec-item"><div class="spec-label">Price</div><div class="spec-value">${formatPrice(product.price)} / ${product.unit}</div></div>
+        <div class="spec-item"><div class="spec-label">Location</div><div class="spec-value">${product.location}</div></div>
+        <div class="spec-item"><div class="spec-label">Rating</div><div class="spec-value">⭐ ${product.rating} / 5</div></div>
+        <div class="spec-item"><div class="spec-label">Total Reviews</div><div class="spec-value">${product.reviews}</div></div>
+        <div class="spec-item"><div class="spec-label">Availability</div><div class="spec-value" style="color:var(--green-600)">✓ Available</div></div>
+      `;
+
+      // Reviews
+      renderReviews();
+      updateTotal();
+    }
+
+    function renderReviews() {
+      const stored = JSON.parse(localStorage.getItem('reviews_' + product.id) || '[]');
+      const all = [...stored, ...sampleReviews];
+      document.getElementById('reviewsContainer').innerHTML = all.map(r => `
+        <div style="padding:14px 0;border-bottom:1px solid var(--gray-100)">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+            <span style="font-weight:700;font-size:0.9rem;color:var(--gray-800)">${r.name}</span>
+            <span style="font-size:0.75rem;color:var(--gray-400)">${formatDate(r.date)}</span>
+          </div>
+          <div style="color:#ffc107;font-size:0.9rem;margin-bottom:4px">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div>
+          <p style="font-size:0.875rem;color:var(--gray-600);line-height:1.6;margin:0">${r.text}</p>
+        </div>
+      `).join('');
+    }
+
+    function switchTab(tab, btn) {
+      ['desc','specs','reviews'].forEach(t => {
+        document.getElementById('tab-' + t).style.display = t === tab ? 'block' : 'none';
+      });
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    function changeQty(delta) {
+      const inp = document.getElementById('qtyInput');
+      const val = Math.max(1, Math.min(99, parseInt(inp.value) + delta));
+      inp.value = val;
+      updateTotal();
+    }
+
+    document.addEventListener('input', (e) => {
+      if (e.target.id === 'qtyInput') updateTotal();
+    });
+
+    function updateTotal() {
+      if (!product) return;
+      const qty = parseInt(document.getElementById('qtyInput').value) || 1;
+      document.getElementById('totalCalc').textContent = formatPrice(product.price * qty + 29);
+    }
+
+    function goRent() {
+      sessionStorage.setItem('selected_product', JSON.stringify(product));
+      window.location.href = 'buy.html';
+    }
+
+    function addToWishlist() {
+      const wishlist = JSON.parse(localStorage.getItem('agro_wishlist') || '[]');
+      if (!wishlist.find(p => p.id === product.id)) {
+        wishlist.push({ id: product.id, name: product.name });
+        localStorage.setItem('agro_wishlist', JSON.stringify(wishlist));
+        showToast('Added to wishlist! 🤍', 'success');
+      } else {
+        showToast('Already in your wishlist', 'info');
+      }
+    }
+
+    function renderRelated() {
+      const related = AgroData.products.filter(p => p.category === product.category && p.id !== product.id).slice(0, 3);
+      document.getElementById('relatedGrid').innerHTML = related.map(p => `
+        <div class="product-card" onclick="loadRelated(${p.id})" style="cursor:pointer">
+          <img class="product-card-img" src="${p.image}" alt="${p.name}"
+               onerror="this.src='https://via.placeholder.com/300x160/e8f5e9/2e7d32?text=${encodeURIComponent(p.name)}'">
+          <div class="product-card-body">
+            <div class="product-card-cat">${getCategoryIcon(p.category)} ${p.category}</div>
+            <div class="product-card-name">${p.name}</div>
+            <div class="product-card-meta">
+              <div class="product-card-price">${formatPrice(p.price)} <span>/ ${p.unit}</span></div>
+              <div class="product-card-rating">★ ${p.rating}</div>
+            </div>
+            <button class="btn btn-primary btn-sm btn-full" onclick="event.stopPropagation();loadRelated(${p.id})">View →</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function loadRelated(id) {
+      const p = AgroData.products.find(x => x.id === id);
+      if (p) { sessionStorage.setItem('selected_product', JSON.stringify(p)); location.reload(); }
+    }
+
+    // Star Rating
+    function hoverRating(n) {
+      const stars = document.querySelectorAll('#starPicker span');
+      stars.forEach((s, i) => s.style.color = i < n ? '#ffc107' : 'var(--gray-300)');
+    }
+    function resetHover() {
+      const stars = document.querySelectorAll('#starPicker span');
+      stars.forEach((s, i) => s.style.color = i < selectedRating ? '#ffc107' : 'var(--gray-300)');
+    }
+    function setRating(n) {
+      selectedRating = n;
+      resetHover();
+    }
+    function submitReview() {
+      const text = document.getElementById('reviewText').value.trim();
+      if (!selectedRating) { showToast('Please select a star rating', 'error'); return; }
+      if (text.length < 10) { showToast('Review must be at least 10 characters', 'error'); return; }
+      const user = AgroData.getUser();
+      const review = { name: user.name, rating: selectedRating, text, date: new Date().toISOString().split('T')[0] };
+      const stored = JSON.parse(localStorage.getItem('reviews_' + product.id) || '[]');
+      stored.unshift(review);
+      localStorage.setItem('reviews_' + product.id, JSON.stringify(stored));
+      document.getElementById('reviewText').value = '';
+      selectedRating = 0;
+      resetHover();
+      renderReviews();
+      showToast('Review submitted! Thank you ⭐', 'success');
+    }
+  </script>
+</body>
+</html>

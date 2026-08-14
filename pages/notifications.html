@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notifications – AgroTECH</title>
+  <link rel="stylesheet" href="../css/global.css">
+  <style>
+    .notif-layout {
+      max-width: 720px;
+      margin: 2rem auto;
+      padding: 0 1.5rem 3rem;
+    }
+
+    .notif-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .notif-toolbar h2 { font-size: 1.15rem; color: var(--green-900); }
+
+    .notif-item {
+      background: white;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--green-100);
+      padding: 1rem 1.25rem;
+      margin-bottom: 10px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      transition: var(--transition);
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+    }
+
+    .notif-item:hover { box-shadow: var(--shadow-md); transform: translateX(3px); }
+
+    .notif-item.unread {
+      border-left: 3px solid var(--green-500);
+      background: var(--green-50);
+    }
+
+    .notif-icon {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .notif-icon.order    { background: #e8f5e9; }
+    .notif-icon.payment  { background: #e3f2fd; }
+    .notif-icon.promo    { background: #fff8e1; }
+    .notif-icon.system   { background: #fce4ec; }
+
+    .notif-body { flex: 1; min-width: 0; }
+
+    .notif-title {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--gray-800);
+      margin-bottom: 2px;
+    }
+
+    .notif-msg {
+      font-size: 0.825rem;
+      color: var(--gray-500);
+      line-height: 1.5;
+    }
+
+    .notif-time {
+      font-size: 0.72rem;
+      color: var(--gray-400);
+      white-space: nowrap;
+      margin-top: 4px;
+    }
+
+    .unread-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--green-500);
+      flex-shrink: 0;
+      margin-top: 6px;
+    }
+
+    .notif-filter {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar" id="navbar"></nav>
+
+  <div class="page-header">
+    <h1>🔔 Notifications</h1>
+    <p>Stay updated on your orders and activity</p>
+  </div>
+
+  <div class="notif-layout">
+    <div class="notif-toolbar">
+      <h2>Recent Notifications <span id="unreadBadge" class="badge badge-success" style="display:none"></span></h2>
+      <button class="btn btn-secondary btn-sm" onclick="markAllRead()">✓ Mark all read</button>
+    </div>
+
+    <div class="notif-filter">
+      <button class="filter-tab active" onclick="filterNotif('all', this)">All</button>
+      <button class="filter-tab" onclick="filterNotif('order', this)">📦 Orders</button>
+      <button class="filter-tab" onclick="filterNotif('payment', this)">💳 Payments</button>
+      <button class="filter-tab" onclick="filterNotif('promo', this)">🎉 Offers</button>
+    </div>
+
+    <div id="notifList"></div>
+  </div>
+
+  <footer class="footer"><p>© 2025 AgroTECH</p></footer>
+  <div id="global-toast" class="toast"></div>
+  <script src="../js/api.js"></script><script src="../js/global.js"></script>
+  <script>
+    const NOTIFS = [
+      { id: 1, type: 'order',   icon: '📦', title: 'Order Confirmed',           msg: 'Your booking for Mahindra Tractor has been confirmed. The owner will contact you shortly.',           time: '2 hours ago',  unread: true  },
+      { id: 2, type: 'payment', icon: '💳', title: 'Payment Successful',        msg: '₹4,529 paid successfully via UPI for Tractor Rental. Transaction ID: TXN8291034.',                  time: '2 hours ago',  unread: true  },
+      { id: 3, type: 'promo',   icon: '🎉', title: '20% Off on Irrigation Kits',msg: 'Special offer valid till 30 Sept. Use code FARM20 at checkout to avail the discount.',               time: '1 day ago',    unread: true  },
+      { id: 4, type: 'order',   icon: '✅', title: 'Order Delivered',           msg: 'Your Fertilizer Pack order has been successfully delivered. Please rate your experience.',           time: '3 days ago',   unread: false },
+      { id: 5, type: 'system',  icon: '🔒', title: 'Profile Updated',           msg: 'Your account details were successfully updated. If this wasn\'t you, contact support immediately.',  time: '5 days ago',   unread: false },
+      { id: 6, type: 'promo',   icon: '🌾', title: 'New Seeds Added',           msg: 'Premium Hybrid Wheat Seeds are now available in your area. Check them out on the search page.',     time: '1 week ago',   unread: false },
+      { id: 7, type: 'order',   icon: '📋', title: 'Service Listing Approved',  msg: 'Your listing "Mahindra 575 DI Tractor" is now live and visible to farmers in your area.',          time: '1 week ago',   unread: false },
+      { id: 8, type: 'payment', icon: '💰', title: 'Refund Initiated',          msg: 'A refund of ₹1,200 has been initiated to your account. Allow 3-5 business days.',                  time: '2 weeks ago',  unread: false },
+    ];
+
+    let readIds = new Set(JSON.parse(localStorage.getItem('agro_read_notifs') || '[]'));
+    let currentFilter = 'all';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      requireAuth();
+      renderNavbar('');
+      renderNotifs(NOTIFS);
+      updateUnreadBadge();
+    });
+
+    function filterNotif(type, btn) {
+      currentFilter = type;
+      document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filtered = type === 'all' ? NOTIFS : NOTIFS.filter(n => n.type === type);
+      renderNotifs(filtered);
+    }
+
+    function renderNotifs(list) {
+      const el = document.getElementById('notifList');
+      if (list.length === 0) {
+        el.innerHTML = `<div class="empty-state"><div class="empty-icon">🔔</div><h3>No notifications</h3><p>You're all caught up!</p></div>`;
+        return;
+      }
+      el.innerHTML = list.map(n => {
+        const isUnread = !readIds.has(n.id) && n.unread;
+        return `
+          <div class="notif-item ${isUnread ? 'unread' : ''}" onclick="readNotif(${n.id}, this)">
+            <div class="notif-icon ${n.type}">${n.icon}</div>
+            <div class="notif-body">
+              <div class="notif-title">${n.title}</div>
+              <div class="notif-msg">${n.msg}</div>
+              <div class="notif-time">🕐 ${n.time}</div>
+            </div>
+            ${isUnread ? '<div class="unread-dot"></div>' : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function readNotif(id, el) {
+      readIds.add(id);
+      localStorage.setItem('agro_read_notifs', JSON.stringify([...readIds]));
+      el.classList.remove('unread');
+      el.querySelector('.unread-dot')?.remove();
+      updateUnreadBadge();
+    }
+
+    function markAllRead() {
+      NOTIFS.forEach(n => readIds.add(n.id));
+      localStorage.setItem('agro_read_notifs', JSON.stringify([...readIds]));
+      renderNotifs(currentFilter === 'all' ? NOTIFS : NOTIFS.filter(n => n.type === currentFilter));
+      updateUnreadBadge();
+      showToast('All notifications marked as read ✓', 'success');
+    }
+
+    function updateUnreadBadge() {
+      const count = NOTIFS.filter(n => n.unread && !readIds.has(n.id)).length;
+      const badge = document.getElementById('unreadBadge');
+      if (count > 0) { badge.textContent = count + ' new'; badge.style.display = 'inline-block'; }
+      else { badge.style.display = 'none'; }
+    }
+  </script>
+</body>
+</html>

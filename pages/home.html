@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home – AgroTECH</title>
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/home.css">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar" id="navbar"></nav>
+
+  <!-- Hero Banner -->
+  <section class="home-hero">
+    <div class="home-hero-content">
+      <div class="hero-greeting" id="greeting">Good morning! 🌤</div>
+      <h1>What do you need <span id="userName">today</span>?</h1>
+      <div class="home-search">
+        <div class="search-bar">
+          <span>🔍</span>
+          <input type="text" id="homeSearch" placeholder="Search machinery, seeds, fertilizers...">
+          <button class="btn btn-primary btn-sm" onclick="performSearch()">Search</button>
+        </div>
+      </div>
+    </div>
+    <div class="quick-actions">
+      <a href="search.html?cat=machinery" class="quick-action-btn">
+        <span>🚜</span><span>Machinery</span>
+      </a>
+      <a href="search.html?cat=irrigation" class="quick-action-btn">
+        <span>💧</span><span>Irrigation</span>
+      </a>
+      <a href="search.html?cat=fertilizer" class="quick-action-btn">
+        <span>🌿</span><span>Fertilizers</span>
+      </a>
+      <a href="search.html?cat=seeds" class="quick-action-btn">
+        <span>🌱</span><span>Seeds</span>
+      </a>
+      <a href="search.html?cat=transport" class="quick-action-btn">
+        <span>🚛</span><span>Transport</span>
+      </a>
+      <a href="addService.html" class="quick-action-btn featured">
+        <span>➕</span><span>Add Service</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="container">
+
+    <!-- Stats Row -->
+    <div class="stats-row">
+      <div class="home-stat-card">
+        <span class="home-stat-icon">📦</span>
+        <div>
+          <div class="home-stat-num" id="totalPurchases">0</div>
+          <div class="home-stat-label">Total Purchases</div>
+        </div>
+      </div>
+      <div class="home-stat-card">
+        <span class="home-stat-icon">🛒</span>
+        <div>
+          <div class="home-stat-num" id="activePurchases">0</div>
+          <div class="home-stat-label">Active Bookings</div>
+        </div>
+      </div>
+      <div class="home-stat-card">
+        <span class="home-stat-icon">💰</span>
+        <div>
+          <div class="home-stat-num" id="totalSpend">₹0</div>
+          <div class="home-stat-label">Total Spent</div>
+        </div>
+      </div>
+      <div class="home-stat-card">
+        <span class="home-stat-icon">📝</span>
+        <div>
+          <div class="home-stat-num" id="myServices">0</div>
+          <div class="home-stat-label">My Listings</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Featured Products -->
+    <section class="section">
+      <div class="section-top-bar">
+        <h2>🚜 Featured Products</h2>
+        <a href="search.html" class="btn btn-secondary btn-sm">View All →</a>
+      </div>
+      <div class="product-grid" id="productGrid">
+        <!-- JS rendered -->
+      </div>
+    </section>
+
+    <!-- Sell / Add Service CTA -->
+    <section class="sell-cta">
+      <div class="sell-cta-content">
+        <div class="sell-cta-icon">🌾</div>
+        <div>
+          <h3>Have equipment or services to offer?</h3>
+          <p>List your machinery, seeds, or services and earn by helping fellow farmers.</p>
+        </div>
+        <a href="addService.html" class="btn btn-amber">Add Your Service →</a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p>© 2025 AgroTECH • <a href="help.html">Help</a> • Emergency: +91 11 1234 5678</p>
+  </footer>
+
+  <div id="global-toast" class="toast"></div>
+  <script src="../js/api.js"></script><script src="../js/global.js"></script>
+  <script src="../js/home.js"></script>
+</body>
+</html>

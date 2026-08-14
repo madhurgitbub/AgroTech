@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Browse Products – AgroTECH</title>
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/home.css">
+  <style>
+    .search-page-header {
+      background: white;
+      border-bottom: 1px solid var(--green-100);
+      padding: 1.5rem 0;
+    }
+
+    .search-controls {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .search-controls .search-bar {
+      flex: 1;
+      min-width: 220px;
+    }
+
+    .filter-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+
+    .filter-tab {
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      border: 1.5px solid var(--gray-200);
+      background: white;
+      color: var(--gray-600);
+    }
+
+    .filter-tab:hover { border-color: var(--green-400); color: var(--green-700); }
+
+    .filter-tab.active {
+      background: var(--green-700);
+      color: white;
+      border-color: var(--green-700);
+    }
+
+    .results-meta {
+      padding: 1rem 0 0.5rem;
+      font-size: 0.875rem;
+      color: var(--gray-500);
+    }
+
+    .results-meta strong { color: var(--green-700); }
+
+    .sort-select {
+      padding: 7px 12px;
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      color: var(--gray-700);
+      background: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar" id="navbar"></nav>
+
+  <div class="search-page-header">
+    <div class="container">
+      <div class="breadcrumb">
+        <a href="home.html">Home</a>
+        <span>/</span>
+        <span>Browse Products</span>
+      </div>
+      <div class="search-controls" style="margin-top:1rem">
+        <div class="search-bar" style="flex:1;min-width:220px">
+          <span>🔍</span>
+          <input type="text" id="searchInput" placeholder="Search machinery, seeds, fertilizers...">
+        </div>
+        <select class="sort-select" id="sortSelect" onchange="applyFilters()">
+          <option value="">Sort: Default</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="rating">Top Rated</option>
+        </select>
+      </div>
+      <div class="filter-tabs" id="filterTabs">
+        <!-- JS rendered -->
+      </div>
+    </div>
+  </div>
+
+  <main class="container section">
+    <div class="results-meta" id="resultsMeta"></div>
+    <div class="product-grid" id="productGrid"></div>
+    <div id="noResults" style="display:none">
+      <div class="empty-state">
+        <div class="empty-icon">🔍</div>
+        <h3>No products found</h3>
+        <p>Try a different search term or category.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>© 2025 AgroTECH • <a href="help.html">Help</a></p>
+  </footer>
+
+  <div id="global-toast" class="toast"></div>
+  <script src="../js/api.js"></script><script src="../js/global.js"></script>
+  <script>
+    let activeCategory = 'All';
+    let searchQuery = '';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      requireAuth();
+      renderNavbar('search');
+
+      // Parse URL params
+      const params = new URLSearchParams(window.location.search);
+      searchQuery = params.get('q') || '';
+      activeCategory = params.get('cat') ? params.get('cat') : 'All';
+
+      document.getElementById('searchInput').value = searchQuery;
+
+      renderCategories();
+      applyFilters();
+    });
+
+    function renderCategories() {
+      const tabs = document.getElementById('filterTabs');
+      tabs.innerHTML = AgroData.categories.map(cat => `
+        <button class="filter-tab ${cat === activeCategory ? 'active' : ''}" 
+                onclick="setCategory('${cat}')">
+          ${getCategoryIcon(cat)} ${cat.charAt(0).toUpperCase() + cat.slice(1)}
+        </button>
+      `).join('');
+    }
+
+    function setCategory(cat) {
+      activeCategory = cat;
+      renderCategories();
+      applyFilters();
+    }
+
+    function applyFilters() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const sort = document.getElementById('sortSelect').value;
+
+      let results = AgroData.products.filter(p => {
+        const matchCat = activeCategory === 'All' || p.category === activeCategory;
+        const matchQ = !query || p.name.toLowerCase().includes(query) || p.description.toLowerCase().includes(query) || p.category.toLowerCase().includes(query);
+        return matchCat && matchQ;
+      });
+
+      if (sort === 'price-asc') results.sort((a, b) => a.price - b.price);
+      else if (sort === 'price-desc') results.sort((a, b) => b.price - a.price);
+      else if (sort === 'rating') results.sort((a, b) => b.rating - a.rating);
+
+      renderResults(results);
+    }
+
+    function renderResults(products) {
+      const grid = document.getElementById('productGrid');
+      const meta = document.getElementById('resultsMeta');
+      const noResults = document.getElementById('noResults');
+
+      meta.innerHTML = `Found <strong>${products.length}</strong> product${products.length !== 1 ? 's' : ''}`;
+
+      if (products.length === 0) {
+        grid.innerHTML = '';
+        noResults.style.display = 'block';
+        return;
+      }
+
+      noResults.style.display = 'none';
+      grid.innerHTML = products.map((p, i) => `
+        <div class="product-card animate-fade-up" style="animation-delay:${i * 0.05}s">
+          <img class="product-card-img" src="${p.image}" alt="${p.name}" 
+               onerror="this.src='https://via.placeholder.com/300x160/e8f5e9/2e7d32?text=${encodeURIComponent(p.name)}'">
+          <div class="product-card-body">
+            <div class="product-card-cat">${getCategoryIcon(p.category)} ${p.category}</div>
+            <div class="product-card-name">${p.name}</div>
+            <div class="product-card-desc">${p.description}</div>
+            <div class="product-card-meta">
+              <div class="product-card-price">${formatPrice(p.price)} <span>/ ${p.unit}</span></div>
+              <div class="product-card-rating">★ ${p.rating} <span style="color:#999">(${p.reviews})</span></div>
+            </div>
+            <div class="product-card-location">📍 ${p.location}</div>
+            <div style="display:flex;gap:8px">
+              <button class="btn btn-secondary btn-sm" style="flex:0 0 auto" onclick="goToDetail(${p.id})">👁</button>
+              <button class="btn btn-primary btn-sm" style="flex:1" onclick="goToBuy(${p.id})">🛒 Rent</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function goToDetail(id) {
+      const product = AgroData.products.find(p => p.id === id);
+      if (product) { sessionStorage.setItem('selected_product', JSON.stringify(product)); window.location.href = 'product.html'; }
+    }
+
+    function goToBuy(id) {
+      const product = AgroData.products.find(p => p.id === id);
+      if (product) {
+        sessionStorage.setItem('selected_product', JSON.stringify(product));
+        window.location.href = 'buy.html';
+      }
+    }
+
+    document.getElementById('searchInput').addEventListener('input', debounce(applyFilters, 300));
+  </script>
+</body>
+</html>

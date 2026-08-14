@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Service – AgroTECH</title>
+  <link rel="stylesheet" href="../css/global.css">
+  <style>
+    .add-service-layout {
+      max-width: 780px;
+      margin: 2rem auto;
+      padding: 0 1.5rem 3rem;
+    }
+
+    .form-card {
+      background: white;
+      border-radius: var(--radius-xl);
+      padding: 2.25rem;
+      border: 1px solid var(--green-100);
+      box-shadow: var(--shadow-md);
+    }
+
+    .form-card h2 {
+      font-size: 1.35rem;
+      color: var(--green-900);
+      margin-bottom: 1.5rem;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--green-100);
+    }
+
+    .image-upload-area {
+      border: 2.5px dashed var(--green-300);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      background: var(--green-50);
+      position: relative;
+    }
+
+    .image-upload-area:hover { border-color: var(--green-500); background: var(--green-100); }
+
+    .image-upload-area input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .upload-icon { font-size: 2.5rem; margin-bottom: 8px; }
+    .upload-text { font-weight: 600; color: var(--green-700); }
+    .upload-hint { font-size: 0.8rem; color: var(--gray-400); margin-top: 4px; }
+
+    .image-preview {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: var(--radius-md);
+      margin-top: 12px;
+      display: none;
+    }
+
+    .tips-box {
+      background: var(--green-50);
+      border: 1.5px solid var(--green-200);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      margin-top: 1.5rem;
+    }
+
+    .tips-box h4 { color: var(--green-800); margin-bottom: 10px; font-size: 0.9rem; }
+    .tips-box ul { margin: 0; padding-left: 1.25rem; }
+    .tips-box li { font-size: 0.82rem; color: var(--gray-600); margin-bottom: 4px; }
+
+    .char-count { font-size: 0.75rem; color: var(--gray-400); text-align: right; margin-top: 3px; }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar" id="navbar"></nav>
+
+  <div class="page-header">
+    <div class="breadcrumb" style="justify-content:center;color:rgba(255,255,255,0.7);padding-top:0">
+      <a href="home.html" style="color:rgba(255,255,255,0.7)">Home</a>
+      <span>/</span>
+      <span style="color:white">Add Service</span>
+    </div>
+    <h1>➕ List Your Service</h1>
+    <p>Help fellow farmers by sharing your resources</p>
+  </div>
+
+  <div class="add-service-layout">
+    <div class="form-card">
+      <h2>📝 Service Details</h2>
+
+      <div class="form-group">
+        <label class="form-label">Service / Product Name *</label>
+        <input type="text" id="svcName" class="form-input" placeholder="e.g. Tractor Rental, Organic Fertilizer Supply" maxlength="80">
+        <div class="char-count" id="nameCount">0/80</div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div class="form-group">
+          <label class="form-label">Category *</label>
+          <select id="svcCat" class="form-select">
+            <option value="">-- Select Category --</option>
+            <option value="machinery">🚜 Machinery</option>
+            <option value="fertilizer">🌿 Fertilizer</option>
+            <option value="irrigation">💧 Irrigation</option>
+            <option value="transport">🚛 Transport</option>
+            <option value="seeds">🌱 Seeds</option>
+            <option value="other">📦 Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Price (₹) *</label>
+          <input type="number" id="svcPrice" class="form-input" placeholder="e.g. 1500" min="1">
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div class="form-group">
+          <label class="form-label">Price Unit</label>
+          <select id="svcUnit" class="form-select">
+            <option value="per day">Per Day</option>
+            <option value="per acre">Per Acre</option>
+            <option value="per kg">Per KG</option>
+            <option value="per bag">Per Bag</option>
+            <option value="per trip">Per Trip</option>
+            <option value="per kit">Per Kit</option>
+            <option value="per piece">Per Piece</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Location</label>
+          <input type="text" id="svcLocation" class="form-input" placeholder="Village / Town, District">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Description *</label>
+        <textarea id="svcDesc" class="form-textarea" rows="4" maxlength="400"
+          placeholder="Describe your service — condition, capacity, special features, availability..."></textarea>
+        <div class="char-count" id="descCount">0/400</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Service Image</label>
+        <div class="image-upload-area" id="uploadArea">
+          <input type="file" id="svcImage" accept="image/*" onchange="previewImage(this)">
+          <div class="upload-icon">📷</div>
+          <div class="upload-text">Click to upload image</div>
+          <div class="upload-hint">JPG, PNG, WEBP — max 5MB</div>
+        </div>
+        <img id="imgPreview" class="image-preview" alt="Preview">
+      </div>
+
+      <div style="display:flex;gap:12px;margin-top:1rem">
+        <button class="btn btn-primary btn-lg" onclick="submitService()" style="flex:1">
+          🚀 Publish Service
+        </button>
+        <a href="home.html" class="btn btn-secondary btn-lg">
+          ← Cancel
+        </a>
+      </div>
+    </div>
+
+    <div class="tips-box">
+      <h4>💡 Tips for a good listing</h4>
+      <ul>
+        <li>Use a clear, specific name (e.g. "Mahindra 575 DI Tractor" not just "Tractor")</li>
+        <li>Mention condition, capacity, and availability in the description</li>
+        <li>Upload a clear photo in good lighting</li>
+        <li>Set a competitive price — check similar listings for reference</li>
+        <li>Include your location so nearby farmers can find you easily</li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="global-toast" class="toast"></div>
+  <script src="../js/api.js"></script><script src="../js/global.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      requireAuth();
+      renderNavbar('');
+      const user = AgroData.getUser();
+      document.getElementById('svcLocation').value = user.location || '';
+
+      // Char counters
+      document.getElementById('svcName').addEventListener('input', function() {
+        document.getElementById('nameCount').textContent = this.value.length + '/80';
+      });
+      document.getElementById('svcDesc').addEventListener('input', function() {
+        document.getElementById('descCount').textContent = this.value.length + '/400';
+      });
+    });
+
+    function previewImage(input) {
+      const file = input.files[0];
+      if (!file) return;
+      if (file.size > 5 * 1024 * 1024) { showToast('Image must be under 5MB.', 'error'); return; }
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const preview = document.getElementById('imgPreview');
+        preview.src = e.target.result;
+        preview.style.display = 'block';
+        document.querySelector('.image-upload-area .upload-text').textContent = file.name;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function submitService() {
+      const name=document.getElementById('svcName').value.trim(), cat=document.getElementById('svcCat').value, price=parseInt(document.getElementById('svcPrice').value), unit=document.getElementById('svcUnit').value, desc=document.getElementById('svcDesc').value.trim(), location=document.getElementById('svcLocation').value.trim();
+      if(!name||!cat||!price||!desc)return showToast('Please fill in all required fields.','error');
+      if(price<1)return showToast('Please enter a valid price.','error');
+      if(desc.length<20)return showToast('Description must be at least 20 characters.','error');
+      const imgPreview=document.getElementById('imgPreview'); const image=imgPreview.style.display!=='none'?imgPreview.src:'';
+      try { await apiRequest('/services',{method:'POST',body:JSON.stringify({name,category:cat,price,unit,description:desc,location,image,available:true})}); showToast('Service listed successfully! 🎉','success'); setTimeout(()=>location.href='home.html',900); }
+      catch(e){showToast(e.message,'error');}
+    }
+  </script>
+</body>
+</html>

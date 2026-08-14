@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Purchases – AgroTECH</title>
+  <link rel="stylesheet" href="../css/global.css">
+  <style>
+    .purchases-layout {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 1.5rem 3rem;
+    }
+
+    .purchase-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 1.25rem 1.5rem;
+      border: 1px solid var(--green-100);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      transition: var(--transition);
+      margin-bottom: 1rem;
+    }
+
+    .purchase-card:hover { box-shadow: var(--shadow-md); transform: translateX(3px); }
+
+    .purchase-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: var(--radius-md);
+      background: var(--green-50);
+      border: 1.5px solid var(--green-200);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .purchase-info { flex: 1; min-width: 0; }
+
+    .purchase-name {
+      font-family: 'Sora', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--gray-800);
+      margin-bottom: 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .purchase-meta {
+      font-size: 0.8rem;
+      color: var(--gray-400);
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .purchase-price {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--green-700);
+      white-space: nowrap;
+    }
+
+    .purchase-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    /* Summary Stats */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    @media(max-width:600px) { .summary-grid { grid-template-columns: 1fr; } }
+
+    .summary-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      text-align: center;
+      border: 1px solid var(--green-100);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .summary-card .s-num {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--green-700);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .summary-card .s-label {
+      font-size: 0.8rem;
+      color: var(--gray-500);
+    }
+
+    .filter-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar" id="navbar"></nav>
+
+  <div class="page-header">
+    <h1>📦 My Purchases</h1>
+    <p>Track all your orders and rental history</p>
+  </div>
+
+  <div class="purchases-layout">
+
+    <!-- Summary -->
+    <div class="summary-grid">
+      <div class="summary-card">
+        <div class="s-num" id="totalOrders">0</div>
+        <div class="s-label">Total Orders</div>
+      </div>
+      <div class="summary-card">
+        <div class="s-num" id="totalSpent">₹0</div>
+        <div class="s-label">Total Spent</div>
+      </div>
+      <div class="summary-card">
+        <div class="s-num" id="pendingOrders">0</div>
+        <div class="s-label">Active/Pending</div>
+      </div>
+    </div>
+
+    <!-- Filter -->
+    <div class="filter-bar">
+      <button class="filter-tab active" onclick="filterPurchases('all', this)">All</button>
+      <button class="filter-tab" onclick="filterPurchases('pending', this)">⏳ Pending</button>
+      <button class="filter-tab" onclick="filterPurchases('completed', this)">✅ Completed</button>
+      <button class="filter-tab" onclick="filterPurchases('cancelled', this)">❌ Cancelled</button>
+    </div>
+
+    <!-- Purchases list -->
+    <div id="purchaseList"></div>
+
+  </div>
+
+  <footer class="footer">
+    <p>© 2025 AgroTECH • <a href="help.html">Help</a></p>
+  </footer>
+
+  <div id="global-toast" class="toast"></div>
+  <script src="../js/api.js"></script><script src="../js/global.js"></script>
+  <script>
+    let allPurchases = [];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      requireAuth();
+      renderNavbar('purchases');
+
+      loadPurchases();
+    });
+
+
+    async function loadPurchases(){
+      try { const data=await apiRequest('/orders'); allPurchases=data.orders||[]; updateSummary(); renderPurchases(allPurchases); }
+      catch(e){ showToast(e.message,'error'); }
+    }
+    function updateSummary() {
+      document.getElementById('totalOrders').textContent = allPurchases.length;
+      document.getElementById('totalSpent').textContent = formatPrice(allPurchases.reduce((s, p) => s + (p.price || 0), 0));
+      document.getElementById('pendingOrders').textContent = allPurchases.filter(p => p.status === 'pending').length;
+    }
+
+    function filterPurchases(status, btn) {
+      document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filtered = status === 'all' ? allPurchases : allPurchases.filter(p => p.status === status);
+      renderPurchases(filtered);
+    }
+
+    function renderPurchases(purchases) {
+      const list = document.getElementById('purchaseList');
+      if (purchases.length === 0) {
+        list.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">📦</div>
+            <h3>No orders found</h3>
+            <p>Your purchase history will appear here.</p>
+            <a href="search.html" class="btn btn-primary" style="margin-top:1rem">Browse Products →</a>
+          </div>`;
+        return;
+      }
+
+      const statusMap = {
+        completed: '<span class="badge badge-success">✅ Completed</span>',
+        pending: '<span class="badge badge-warning">⏳ Pending</span>',
+        cancelled: '<span class="badge badge-danger">❌ Cancelled</span>',
+      };
+
+      const payIcon = { cod: '💵', online: '💳', upi: '📱', wallet: '👛', '': '💰' };
+
+      list.innerHTML = purchases.map(p => `
+        <div class="purchase-card animate-fade-up">
+          <div class="purchase-icon">🛒</div>
+          <div class="purchase-info">
+            <div class="purchase-name">${p.productName}</div>
+            <div class="purchase-meta">
+              <span>📅 ${formatDate((p.created_at || p.date))}</span>
+              <span>📦 Qty: ${p.quantity || 1}</span>
+              <span>${payIcon[(p.payment_method || p.paymentMethod)] || '💰'} ${((p.payment_method || p.paymentMethod) || 'cod').toUpperCase()}</span>
+              ${(p.order_id || p.orderId) ? `<span>🔖 #${(p.order_id || p.orderId)}</span>` : ''}
+            </div>
+          </div>
+          <div class="purchase-right">
+            <div class="purchase-price">${formatPrice(p.price)}</div>
+            ${statusMap[p.status] || ''}
+          </div>
+        </div>
+      `).join('');
+    }
+  </script>
+</body>
+</html>

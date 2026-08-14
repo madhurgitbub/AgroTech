@@ -1,0 +1,149 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Mahindra Tractor",
+      "category": "machinery",
+      "price": 800,
+      "unit": "per acre",
+      "description": "Powerful 45HP tractor suitable for ploughing, tilling, and heavy-duty farming tasks. GPS-enabled for precision agriculture.",
+      "image": "https://5.imimg.com/data5/SELLER/Default/2021/6/CX/WL/RI/30912792/mahindra-tractor-yuvraj-bumper-1000x1000.jpg",
+      "rating": 4.5,
+      "reviews": 128,
+      "available": true,
+      "location": "Indore, MP"
+    },
+    {
+      "id": 2,
+      "name": "John Deere Tractor",
+      "category": "machinery",
+      "price": 1000,
+      "unit": "per acre",
+      "description": "High-efficiency John Deere with advanced hydraulics. Perfect for large-scale farming operations.",
+      "image": "https://cpimg.tistatic.com/10029058/b/4/John-deere-Tractors..jpg",
+      "rating": 4.8,
+      "reviews": 95,
+      "available": true,
+      "location": "Bhopal, MP"
+    },
+    {
+      "id": 3,
+      "name": "Combine Harvester",
+      "category": "machinery",
+      "price": 1200,
+      "unit": "per acre",
+      "description": "Modern combine harvester for wheat, rice, and soybean. Cuts harvesting time by 70%.",
+      "image": "https://5.imimg.com/data5/WC/IE/YH/ANDROID-86040604/prod-20200810-2031297210080910753376724-jpg-1000x1000.jpg",
+      "rating": 4.6,
+      "reviews": 72,
+      "available": true,
+      "location": "Ujjain, MP"
+    },
+    {
+      "id": 4,
+      "name": "Rotavator",
+      "category": "machinery",
+      "price": 500,
+      "unit": "per acre",
+      "description": "Heavy-duty rotavator for soil preparation. Breaks clods and prepares perfect seedbed.",
+      "image": "https://www.fieldking.com/blogs/wp-content/uploads/2024/09/Ploughing.jpg",
+      "rating": 4.3,
+      "reviews": 64,
+      "available": true,
+      "location": "Gwalior, MP"
+    },
+    {
+      "id": 5,
+      "name": "Drip Irrigation Kit",
+      "category": "irrigation",
+      "price": 3500,
+      "unit": "per kit",
+      "description": "Complete drip irrigation setup for 1 acre. Saves 60% water and increases yield.",
+      "image": "https://5.imimg.com/data5/SELLER/Default/2022/10/BC/MY/LI/21395960/drip-irrigation-system-1000x1000.jpg",
+      "rating": 4.7,
+      "reviews": 89,
+      "available": true,
+      "location": "Indore, MP"
+    },
+    {
+      "id": 6,
+      "name": "DAP Fertilizer (50kg)",
+      "category": "fertilizer",
+      "price": 1350,
+      "unit": "per bag",
+      "description": "High-quality DAP fertilizer for improved root development and yield. Certified organic compatible.",
+      "image": "https://5.imimg.com/data5/SELLER/Default/2022/5/NJ/VT/MB/26553143/dap-fertilizer-500x500.jpg",
+      "rating": 4.4,
+      "reviews": 201,
+      "available": true,
+      "location": "Bhopal, MP"
+    },
+    {
+      "id": 7,
+      "name": "Wheat Seeds (Premium)",
+      "category": "seeds",
+      "price": 450,
+      "unit": "per kg",
+      "description": "High-yield HYV wheat seeds. Disease resistant, drought tolerant. Yield: 45-55 q/ha.",
+      "image": "https://5.imimg.com/data5/SELLER/Default/2021/9/ZG/OS/PB/3131427/wheat-seeds-500x500.jpg",
+      "rating": 4.6,
+      "reviews": 156,
+      "available": true,
+      "location": "Sehore, MP"
+    },
+    {
+      "id": 8,
+      "name": "Mini Truck Transport",
+      "category": "transport",
+      "price": 2500,
+      "unit": "per trip",
+      "description": "5-ton capacity mini truck for crop transport. Available 24/7 within 100km radius.",
+      "image": "https://5.imimg.com/data5/SELLER/Default/2022/3/QF/XN/XJ/149399990/mini-truck-500x500.jpg",
+      "rating": 4.2,
+      "reviews": 43,
+      "available": true,
+      "location": "Indore, MP"
+    }
+  ],
+  "categories": ["All", "machinery", "irrigation", "fertilizer", "seeds", "transport"],
+  "users": [
+    {
+      "id": 1,
+      "name": "Madhur Pratap Singh",
+      "email": "madhurpratapsingh2005@gmail.com",
+      "phone": "8127059423",
+      "location": "Indore, MP",
+      "role": "farmer"
+    }
+  ],
+  "purchases": [
+    {
+      "id": 1,
+      "productId": 1,
+      "productName": "Tractor Rental",
+      "date": "2025-09-05",
+      "price": 4500,
+      "status": "completed",
+      "quantity": 1
+    },
+    {
+      "id": 2,
+      "productId": 6,
+      "productName": "Fertilizer Pack (20kg)",
+      "date": "2025-09-02",
+      "price": 1200,
+      "status": "completed",
+      "quantity": 1
+    },
+    {
+      "id": 3,
+      "productId": 5,
+      "productName": "Irrigation Pump",
+      "date": "2025-08-28",
+      "price": 15000,
+      "status": "pending",
+      "quantity": 1
+    }
+  ],
+  "services": []
+}

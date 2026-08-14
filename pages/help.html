@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Help & Support – AgroTECH</title>
+  <link rel="stylesheet" href="../css/global.css">
+  <style>
+    .help-layout {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 0 1.5rem 3rem;
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    @media(max-width: 900px) { .help-layout { grid-template-columns: 1fr; } }
+
+    /* FAQ */
+    .faq-card {
+      background: white;
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+      border: 1px solid var(--green-100);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .faq-card h2 { font-size: 1.2rem; color: var(--green-900); margin-bottom: 1.5rem; }
+
+    .faq-item {
+      border-bottom: 1px solid var(--gray-100);
+    }
+
+    .faq-item:last-of-type { border-bottom: none; }
+
+    .faq-q {
+      padding: 14px 0;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--gray-800);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      transition: var(--transition);
+      user-select: none;
+    }
+
+    .faq-q:hover { color: var(--green-700); }
+
+    .faq-q .arrow {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--green-100);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      flex-shrink: 0;
+      transition: var(--transition);
+    }
+
+    .faq-q.open .arrow { background: var(--green-500); color: white; transform: rotate(180deg); }
+
+    .faq-a {
+      padding: 0 0 14px;
+      font-size: 0.875rem;
+      color: var(--gray-600);
+      line-height: 1.7;
+      display: none;
+    }
+
+    .faq-a.open { display: block; }
+
+    /* Guides */
+    .guides-card {
+      background: white;
+      border-radius: var(--radius-xl);
+      padding: 1.5rem;
+      border: 1px solid var(--green-100);
+      box-shadow: var(--shadow-sm);
+      margin-top: 1.5rem;
+    }
+
+    .guides-card h3 { font-size: 1rem; color: var(--green-900); margin-bottom: 1rem; }
+
+    .guide-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      border-radius: var(--radius-md);
+      transition: var(--transition);
+      cursor: pointer;
+      color: var(--gray-700);
+      font-size: 0.875rem;
+    }
+
+    .guide-item:hover { background: var(--green-50); color: var(--green-700); }
+
+    /* Support Form */
+    .support-card {
+      background: white;
+      border-radius: var(--radius-xl);
+      padding: 1.75rem;
+      border: 1px solid var(--green-100);
+      box-shadow: var(--shadow-sm);
+      position: sticky;
+      top: 80px;
+    }
+
+    .support-card h2 { font-size: 1.1rem; color: var(--green-900); margin-bottom: 0.4rem; }
+    .support-card .support-meta { font-size: 0.8rem; color: var(--gray-400); margin-bottom: 1.25rem; }
+
+    .contact-info {
+      background: var(--green-50);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      margin-top: 1.25rem;
+      font-size: 0.82rem;
+      color: var(--gray-600);
+      border: 1.5px solid var(--green-100);
+    }
+
+    .contact-info strong { color: var(--green-700); }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar" id="navbar"></nav>
+
+  <div class="page-header">
+    <h1>❓ Help & Support</h1>
+    <p>Find answers or get in touch with our team</p>
+  </div>
+
+  <div class="help-layout">
+
+    <!-- Left: FAQ + Guides -->
+    <div>
+      <div class="faq-card">
+        <h2>📋 Frequently Asked Questions</h2>
+
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            <span>1. Apna product/service kaise list karun?</span>
+            <div class="arrow">▼</div>
+          </div>
+          <div class="faq-a">Login karne ke baad "Add Service" button par click karein. Apna product name, category, price, description aur image upload karein. Submit karne par aapki listing live ho jaayegi.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            <span>2. Payment kaise karta hai platform?</span>
+            <div class="arrow">▼</div>
+          </div>
+          <div class="faq-a">Hum Cash on Delivery (COD), Online Card Payment, UPI (Google Pay, PhonePe, Paytm), aur Wallet payments support karte hain. Sare online payments encrypted aur secure hain.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            <span>3. Order cancel ya refund karna hai</span>
+            <div class="arrow">▼</div>
+          </div>
+          <div class="faq-a">Order place karne ke 24 ghante ke andar "My Purchases" page se cancel request bhej sakte hain. Online payments ke liye refund 3-5 business days mein process hoga. COD ke liye koi charge nahi.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            <span>4. Password bhool gaya — kya karun?</span>
+            <div class="arrow">▼</div>
+          </div>
+          <div class="faq-a">Abhi ke liye, support form bharo aur "Account" topic select karo. Humari team aapki registered email pe reset link bhejegi. Password reset feature jaldi launch hoga.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            <span>5. Machine ki delivery kaise hogi?</span>
+            <div class="arrow">▼</div>
+          </div>
+          <div class="faq-a">Order confirm hone ke baad service provider directly aapse contact karega. Zyaatar cases mein machine aapke address par deliver ki jaati hai. Location aur distance ke hisaab se timing vary kar sakti hai.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            <span>6. Kya seller ko rate kar sakte hain?</span>
+            <div class="arrow">▼</div>
+          </div>
+          <div class="faq-a">Haan! Service milne ke baad "My Purchases" se order pe click karein aur rating de sakte hain. Aapki rating platform ki quality maintain karne mein help karti hai.</div>
+        </div>
+
+        <p style="font-size:0.8rem;color:var(--gray-400);margin-top:1rem;padding-top:1rem;border-top:1px solid var(--gray-100)">
+          Aur questions ke liye right side ka support form use karein — hum 24-48 ghante mein reply karte hain.
+        </p>
+      </div>
+
+      <div class="guides-card">
+        <h3>📚 Guides & Resources</h3>
+        <div class="guide-item">📹 <span>How-to videos (coming soon)</span></div>
+        <div class="guide-item">📋 <span>Seller policies and listing tips</span></div>
+        <div class="guide-item">💳 <span>Payment & refund policy</span></div>
+        <div class="guide-item">🔒 <span>Privacy policy</span></div>
+        <div class="guide-item">📱 <span>Mobile app download (coming soon)</span></div>
+      </div>
+    </div>
+
+    <!-- Right: Support Form -->
+    <aside>
+      <div class="support-card">
+        <h2>📬 Contact Support</h2>
+        <p class="support-meta">Our team replies to your registered email within 24-48 hours.</p>
+
+        <div class="form-group">
+          <label class="form-label">Topic *</label>
+          <select id="supportTopic" class="form-select">
+            <option value="">-- Select topic --</option>
+            <option>Account & Login</option>
+            <option>Listing / Product</option>
+            <option>Payments & Refunds</option>
+            <option>Order / Booking</option>
+            <option>Technical Issue</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Your Name</label>
+          <input type="text" id="supportName" class="form-input" placeholder="Your full name">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Message *</label>
+          <textarea id="supportMsg" class="form-textarea" rows="5" placeholder="Describe your issue in detail..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Attachment (optional)</label>
+          <input type="file" id="supportFile" class="form-input" accept=".png,.jpg,.pdf" style="padding:8px">
+        </div>
+
+        <button class="btn btn-primary btn-full" onclick="submitSupport()">
+          📤 Send Request
+        </button>
+
+        <div class="contact-info">
+          <strong>📞 Emergency Helpline</strong><br>
+          +91 11 1234 5678<br>
+          Mon–Fri: 9:00 AM – 6:00 PM IST
+        </div>
+      </div>
+    </aside>
+
+  </div>
+
+  <footer class="footer">
+    <p>© 2025 AgroTECH • Emergency: +91 11 1234 5678</p>
+  </footer>
+
+  <div id="global-toast" class="toast"></div>
+  <script src="../js/api.js"></script><script src="../js/global.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      requireAuth();
+      renderNavbar('help');
+      const user = AgroData.getUser();
+      document.getElementById('supportName').value = user.name;
+    });
+
+    function toggleFaq(el) {
+      const ans = el.nextElementSibling;
+      const isOpen = el.classList.contains('open');
+      // Close all
+      document.querySelectorAll('.faq-q').forEach(q => {
+        q.classList.remove('open');
+        q.nextElementSibling.classList.remove('open');
+      });
+      if (!isOpen) {
+        el.classList.add('open');
+        ans.classList.add('open');
+      }
+    }
+
+    function submitSupport() {
+      const topic = document.getElementById('supportTopic').value;
+      const msg = document.getElementById('supportMsg').value.trim();
+      if (!topic || !msg) { showToast('Please select a topic and write your message.', 'error'); return; }
+      if (msg.length < 10) { showToast('Message is too short. Please provide more details.', 'error'); return; }
+      showToast('Support request sent! We\'ll reply within 24-48 hours. ✅', 'success');
+      document.getElementById('supportTopic').value = '';
+      document.getElementById('supportMsg').value = '';
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rent / Buy – AgroTECH</title>
+  <link rel="stylesheet" href="../css/global.css">
+  <style>
+    .buy-layout {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    @media(max-width: 768px) { .buy-layout { grid-template-columns: 1fr; } }
+
+    /* Product summary */
+    .product-summary {
+      background: white;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--green-100);
+      box-shadow: var(--shadow-sm);
+      position: sticky;
+      top: 80px;
+    }
+
+    .product-summary-img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .product-summary-body {
+      padding: 1.25rem;
+    }
+
+    .product-summary-cat {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--green-600);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .product-summary-name {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .product-summary-desc {
+      font-size: 0.85rem;
+      color: var(--gray-500);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .price-tag {
+      background: var(--green-50);
+      border: 1.5px solid var(--green-200);
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .price-tag .price-label { font-size: 0.8rem; color: var(--gray-500); }
+
+    .price-tag .price-big {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--green-700);
+    }
+
+    /* Order form */
+    .order-form-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      border: 1px solid var(--green-100);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .order-form-card h2 {
+      font-size: 1.3rem;
+      color: var(--green-900);
+      margin-bottom: 1.5rem;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--green-100);
+    }
+
+    /* Payment Method */
+    .payment-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .payment-option {
+      border: 2px solid var(--gray-200);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      cursor: pointer;
+      transition: var(--transition);
+      text-align: center;
+    }
+
+    .payment-option:hover { border-color: var(--green-400); }
+
+    .payment-option.selected {
+      border-color: var(--green-500);
+      background: var(--green-50);
+    }
+
+    .payment-option .pay-icon { font-size: 1.5rem; margin-bottom: 4px; }
+    .payment-option .pay-label { font-size: 0.8rem; font-weight: 600; color: var(--gray-700); }
+
+    /* Online Payment Form */
+    .online-payment-form {
+      display: none;
+      margin-top: 1rem;
+    }
+
+    .online-payment-form.show { display: block; }
+
+    .card-number-input {
+      letter-spacing: 2px;
+      font-family: monospace;
+      font-size: 1rem;
+    }
+
+    /* Order total */
+    .order-total {
+      background: var(--green-50);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.875rem;
+      color: var(--gray-600);
+      margin-bottom: 6px;
+    }
+
+    .total-row.final {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--green-800);
+      border-top: 1.5px solid var(--green-200);
+      padding-top: 8px;
+      margin-top: 8px;
+      margin-bottom: 0;
+    }
+
+    /* Success Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      z-index: 9000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .modal-overlay.show { display: flex; }
+
+    .success-modal {
+      background: white;
+      border-radius: var(--radius-xl);
+      padding: 2.5rem;
+      text-align: center;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: var(--shadow-xl);
+      animation: fadeInUp 0.4s ease;
+    }
+
+    .success-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      animation: bounceIn 0.5s ease;
+    }
+
+    @keyframes bounceIn {
+      0% { transform: scale(0); }
+      60% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    .success-modal h2 { font-size: 1.5rem; color: var(--green-800); margin-bottom: 0.5rem; }
+    .success-modal p { color: var(--gray-500); font-size: 0.9rem; margin-bottom: 1.5rem; }
+
+    .order-id-badge {
+      background: var(--green-50);
+      border: 1.5px solid var(--green-200);
+      border-radius: var(--radius-md);
+      padding: 10px;
+      font-family: monospace;
+      font-size: 0.9rem;
+      color: var(--green-700);
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar" id="navbar"></nav>
+
+  <div class="page-header">
+    <div class="breadcrumb" style="justify-content:center;color:rgba(255,255,255,0.7);padding-top:0">
+      <a href="home.html" style="color:rgba(255,255,255,0.7)">Home</a>
+      <span>/</span>
+      <a href="search.html" style="color:rgba(255,255,255,0.7)">Products</a>
+      <span>/</span>
+      <span style="color:white" id="headerProductName">Rent / Buy</span>
+    </div>
+    <h1>🛒 Place Your Order</h1>
+  </div>
+
+  <div class="buy-layout">
+
+    <!-- Order Form -->
+    <div class="order-form-card">
+      <h2>📋 Order Details</h2>
+
+      <div class="form-group">
+        <label class="form-label">Quantity / Quantity of Days *</label>
+        <input type="number" id="quantity" class="form-input" min="1" value="1" oninput="updateTotal()">
+      </div>
+
+      <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div class="form-group">
+          <label class="form-label">Full Name *</label>
+          <input type="text" id="fullname" class="form-input" placeholder="Your full name">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone Number *</label>
+          <input type="tel" id="phone" class="form-input" placeholder="9876543210">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Delivery / Service Address *</label>
+        <textarea id="address" class="form-textarea" rows="2" placeholder="Village / Town, District, State"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Special Notes (optional)</label>
+        <textarea id="notes" class="form-textarea" rows="2" placeholder="Any special requirements..."></textarea>
+      </div>
+
+      <!-- Payment Method -->
+      <div class="form-group">
+        <label class="form-label">Payment Method *</label>
+        <div class="payment-options">
+          <div class="payment-option" id="pay-cod" onclick="selectPayment('cod')">
+            <div class="pay-icon">💵</div>
+            <div class="pay-label">Cash on Delivery</div>
+          </div>
+          <div class="payment-option" id="pay-online" onclick="selectPayment('online')">
+            <div class="pay-icon">💳</div>
+            <div class="pay-label">Pay Online</div>
+          </div>
+          <div class="payment-option" id="pay-upi" onclick="selectPayment('upi')">
+            <div class="pay-icon">📱</div>
+            <div class="pay-label">UPI / GPay</div>
+          </div>
+          <div class="payment-option" id="pay-wallet" onclick="selectPayment('wallet')">
+            <div class="pay-icon">👛</div>
+            <div class="pay-label">Wallet</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Online Card Form -->
+      <div class="online-payment-form" id="cardForm">
+        <div class="form-group">
+          <label class="form-label">Card Number</label>
+          <input type="text" class="form-input card-number-input" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19">
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div class="form-group">
+            <label class="form-label">Expiry Date</label>
+            <input type="text" class="form-input" id="cardExpiry" placeholder="MM/YY" maxlength="5">
+          </div>
+          <div class="form-group">
+            <label class="form-label">CVV</label>
+            <input type="password" class="form-input" id="cardCvv" placeholder="•••" maxlength="3">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Cardholder Name</label>
+          <input type="text" class="form-input" id="cardName" placeholder="Name on card">
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:0.8rem;color:var(--gray-500);margin-top:-4px">
+          🔒 Payments are secured and encrypted
+        </div>
+      </div>
+
+      <!-- UPI Form -->
+      <div class="online-payment-form" id="upiForm">
+        <div class="form-group">
+          <label class="form-label">UPI ID</label>
+          <input type="text" class="form-input" id="upiId" placeholder="yourname@upi">
+        </div>
+        <div style="font-size:0.8rem;color:var(--gray-500)">💡 Enter your Google Pay, PhonePe, or Paytm UPI ID</div>
+      </div>
+
+      <!-- Order Total -->
+      <div class="order-total">
+        <div class="total-row"><span>Product Price</span><span id="basePrice">₹0</span></div>
+        <div class="total-row"><span>Quantity</span><span id="totalQty">×1</span></div>
+        <div class="total-row"><span>Convenience Fee</span><span>₹29</span></div>
+        <div class="total-row final"><span>Total Payable</span><span id="totalPayable">₹29</span></div>
+      </div>
+
+      <button class="btn btn-primary btn-full btn-lg" onclick="placeOrder()" style="margin-top:1rem">
+        ✅ Place Order
+      </button>
+    </div>
+
+    <!-- Product Summary -->
+    <div>
+      <div class="product-summary" id="productSummary">
+        <div class="product-summary-body" style="text-align:center;padding:2rem">
+          <div class="spinner" style="margin:0 auto"></div>
+          <p style="color:var(--gray-400);font-size:0.85rem;margin-top:1rem">Loading product...</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Success Modal -->
+  <div class="modal-overlay" id="successModal">
+    <div class="success-modal">
+      <div class="success-icon">🎉</div>
+      <h2>Order Placed!</h2>
+      <p>Your order has been confirmed. You'll be contacted shortly.</p>
+      <div class="order-id-badge" id="orderId">Order #000000</div>
+      <button class="btn btn-primary btn-full" onclick="goHome()">Back to Home →</button>
+      <button class="btn btn-secondary btn-full" style="margin-top:8px" onclick="viewPurchases()">View My Purchases</button>
+    </div>
+  </div>
+
+  <div id="global-toast" class="toast"></div>
+  <script src="../js/api.js"></script><script src="../js/global.js"></script>
+  <script>
+    let selectedProduct = null;
+    let selectedPayment = '';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      requireAuth();
+      renderNavbar('');
+      loadProduct();
+
+      const user = AgroData.getUser();
+      document.getElementById('fullname').value = user.name;
+      document.getElementById('phone').value = user.phone;
+      document.getElementById('address').value = user.location;
+    });
+
+    function loadProduct() {
+      const raw = sessionStorage.getItem('selected_product');
+      if (!raw) {
+        // Fallback to first product
+        selectedProduct = AgroData.products[0];
+      } else {
+        selectedProduct = JSON.parse(raw);
+      }
+      renderProductSummary();
+      updateTotal();
+      document.getElementById('headerProductName').textContent = selectedProduct.name;
+    }
+
+    function renderProductSummary() {
+      const el = document.getElementById('productSummary');
+      el.innerHTML = `
+        <img class="product-summary-img" src="${selectedProduct.image}" alt="${selectedProduct.name}" 
+             onerror="this.src='https://via.placeholder.com/400x200/e8f5e9/2e7d32?text=${encodeURIComponent(selectedProduct.name)}'">
+        <div class="product-summary-body">
+          <div class="product-summary-cat">${getCategoryIcon(selectedProduct.category)} ${selectedProduct.category}</div>
+          <div class="product-summary-name">${selectedProduct.name}</div>
+          <div class="product-summary-desc">${selectedProduct.description}</div>
+          <div style="display:flex;align-items:center;gap:6px;font-size:0.8rem;color:#f59e0b;margin-bottom:8px">
+            ★ ${selectedProduct.rating} <span style="color:var(--gray-400)">(${selectedProduct.reviews} reviews)</span>
+          </div>
+          <div style="font-size:0.78rem;color:var(--gray-400);margin-bottom:10px">📍 ${selectedProduct.location}</div>
+          <div class="price-tag">
+            <div>
+              <div class="price-label">Price per ${selectedProduct.unit}</div>
+              <div class="price-big">${formatPrice(selectedProduct.price)}</div>
+            </div>
+            <span class="badge badge-success">✓ Available</span>
+          </div>
+        </div>
+      `;
+    }
+
+    function updateTotal() {
+      if (!selectedProduct) return;
+      const qty = parseInt(document.getElementById('quantity').value) || 1;
+      const base = selectedProduct.price * qty;
+      const total = base + 29;
+      document.getElementById('basePrice').textContent = formatPrice(selectedProduct.price);
+      document.getElementById('totalQty').textContent = `×${qty}`;
+      document.getElementById('totalPayable').textContent = formatPrice(total);
+    }
+
+    function selectPayment(method) {
+      selectedPayment = method;
+      document.querySelectorAll('.payment-option').forEach(el => el.classList.remove('selected'));
+      document.getElementById('pay-' + method).classList.add('selected');
+
+      document.getElementById('cardForm').classList.remove('show');
+      document.getElementById('upiForm').classList.remove('show');
+      if (method === 'online') document.getElementById('cardForm').classList.add('show');
+      if (method === 'upi') document.getElementById('upiForm').classList.add('show');
+    }
+
+    // Card number formatting
+    document.addEventListener('input', (e) => {
+      if (e.target.id === 'cardNumber') {
+        let v = e.target.value.replace(/\D/g, '').substring(0, 16);
+        e.target.value = v.replace(/(.{4})/g, '$1 ').trim();
+      }
+      if (e.target.id === 'cardExpiry') {
+        let v = e.target.value.replace(/\D/g, '').substring(0, 4);
+        if (v.length >= 3) v = v.substring(0,2) + '/' + v.substring(2);
+        e.target.value = v;
+      }
+    });
+
+    async function placeOrder() {
+      const fullname = document.getElementById('fullname').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const address = document.getElementById('address').value.trim();
+      const qty = parseInt(document.getElementById('quantity').value) || 1;
+
+      if (!fullname || !phone || !address) {
+        showToast('Please fill in all required fields.', 'error');
+        return;
+      }
+      if (!selectedPayment) {
+        showToast('Please select a payment method.', 'error');
+        return;
+      }
+      if (selectedPayment === 'online') {
+        const cardNum = document.getElementById('cardNumber').value.replace(/\s/g,'');
+        if (cardNum.length !== 16) { showToast('Please enter a valid 16-digit card number.', 'error'); return; }
+        if (!document.getElementById('cardCvv').value.trim()) { showToast('Please enter CVV.', 'error'); return; }
+      }
+      if (selectedPayment === 'upi') {
+        const upi = document.getElementById('upiId').value.trim();
+        if (!upi.includes('@')) { showToast('Please enter a valid UPI ID.', 'error'); return; }
+      }
+
+      const orderId = 'AGT' + Date.now().toString().slice(-8);
+      const total = selectedProduct.price * qty + 29;
+
+      try {
+        const saved = await apiRequest('/orders',{method:'POST',body:JSON.stringify({product_id:selectedProduct.id,product_name:selectedProduct.name,quantity:qty,price:total,payment_method:selectedPayment,address,notes:document.getElementById('notes').value.trim()})});
+        document.getElementById('orderId').textContent = 'Order #' + saved.order_id;
+        document.getElementById('successModal').classList.add('show');
+      } catch(e) { showToast(e.message,'error'); }
+    }
+
+    function goHome() { window.location.href = 'home.html'; }
+    function viewPurchases() { window.location.href = 'my_purchase.html'; }
+  </script>
+</body>
+</html>

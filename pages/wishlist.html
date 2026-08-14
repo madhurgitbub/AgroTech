@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wishlist – AgroTECH</title>
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/home.css">
+</head>
+<body>
+
+  <nav class="navbar" id="navbar"></nav>
+
+  <div class="page-header">
+    <h1>🤍 My Wishlist</h1>
+    <p>Products you've saved for later</p>
+  </div>
+
+  <main class="container section">
+    <div id="wishlistGrid" class="product-grid"></div>
+    <div id="emptyWishlist" style="display:none">
+      <div class="empty-state">
+        <div class="empty-icon">🤍</div>
+        <h3>Your wishlist is empty</h3>
+        <p>Browse products and save your favourites here.</p>
+        <a href="search.html" class="btn btn-primary" style="margin-top:1rem">Browse Products →</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer"><p>© 2025 AgroTECH</p></footer>
+  <div id="global-toast" class="toast"></div>
+  <script src="../js/api.js"></script><script src="../js/global.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      requireAuth();
+      renderNavbar('');
+      loadWishlist();
+    });
+
+    function loadWishlist() {
+      const wishlist = JSON.parse(localStorage.getItem('agro_wishlist') || '[]');
+      const grid = document.getElementById('wishlistGrid');
+      const empty = document.getElementById('emptyWishlist');
+
+      if (wishlist.length === 0) {
+        grid.style.display = 'none';
+        empty.style.display = 'block';
+        return;
+      }
+
+      const products = wishlist.map(w => AgroData.products.find(p => p.id === w.id)).filter(Boolean);
+
+      if (products.length === 0) {
+        grid.style.display = 'none';
+        empty.style.display = 'block';
+        return;
+      }
+
+      grid.innerHTML = products.map(p => `
+        <div class="product-card animate-fade-up">
+          <img class="product-card-img" src="${p.image}" alt="${p.name}"
+               onerror="this.src='https://via.placeholder.com/300x160/e8f5e9/2e7d32?text=${encodeURIComponent(p.name)}'">
+          <div class="product-card-body">
+            <div class="product-card-cat">${getCategoryIcon(p.category)} ${p.category}</div>
+            <div class="product-card-name">${p.name}</div>
+            <div class="product-card-desc">${p.description}</div>
+            <div class="product-card-meta">
+              <div class="product-card-price">${formatPrice(p.price)} <span>/ ${p.unit}</span></div>
+              <div class="product-card-rating">★ ${p.rating}</div>
+            </div>
+            <div class="product-card-location">📍 ${p.location}</div>
+            <div style="display:flex;gap:8px">
+              <button class="btn btn-primary btn-sm" style="flex:1" onclick="rentNow(${p.id})">🛒 Rent</button>
+              <button class="btn btn-danger btn-sm" onclick="removeWishlist(${p.id}, this)">🗑</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function rentNow(id) {
+      const p = AgroData.products.find(x => x.id === id);
+      if (p) { sessionStorage.setItem('selected_product', JSON.stringify(p)); window.location.href = 'buy.html'; }
+    }
+
+    function removeWishlist(id, btn) {
+      let wishlist = JSON.parse(localStorage.getItem('agro_wishlist') || '[]');
+      wishlist = wishlist.filter(w => w.id !== id);
+      localStorage.setItem('agro_wishlist', JSON.stringify(wishlist));
+      btn.closest('.product-card').remove();
+      showToast('Removed from wishlist', 'info');
+      if (wishlist.length === 0) {
+        document.getElementById('wishlistGrid').style.display = 'none';
+        document.getElementById('emptyWishlist').style.display = 'block';
+      }
+    }
+  </script>
+</body>
+</html>
