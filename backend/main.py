@@ -13,11 +13,12 @@ from supabase import create_client, Client
 
 load_dotenv(Path(__file__).with_name('.env'))
 
-SUPABASE_URL = os.getenv('SUPABASE_URL', '')
-SUPABASE_SERVICE_ROLE_KEY = os.getenv('SUPABASE_SERVICE_ROLE_KEY', '')
-JWT_SECRET = os.getenv('JWT_SECRET', 'change-me')
+SUPABASE_URL = os.getenv('SUPABASE_URL', 'https://xdvibkvbzuvsiainjujt.supabase.co')
+SUPABASE_SERVICE_ROLE_KEY = os.getenv('SUPABASE_SERVICE_ROLE_KEY', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhkdmlia3ZienV2c2lhaW5qdWp0Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NjcxODYxOCwiZXhwIjoyMTAyMjk0NjE4fQ.ag2-CDHp4zTcvcoxeDZNY1gE1FZvFNO-bgCEWJtdjNI')
+JWT_SECRET=('6f579b0e-63c3-41d3-8e3d-5ed1b8da2e4f')
+JWT_SECRET = os.getenv('JWT_SECRET', '6f579b0e-63c3-41d3-8e3d-5ed1b8da2e4f')
 JWT_EXPIRE_MINUTES = int(os.getenv('JWT_EXPIRE_MINUTES', '1440'))
-CORS_ORIGINS = [x.strip() for x in os.getenv('CORS_ORIGINS', '*').split(',') if x.strip()]
+CORS_ORIGINS = [x.strip() for x in os.getenv('CORS_ORIGINS', 'http://127.0.0.1:5500,http://localhost:5500').split(',') if x.strip()]
 
 if not SUPABASE_URL or not SUPABASE_SERVICE_ROLE_KEY:
     # App still starts so /docs can be inspected; database endpoints return a clear configuration error.
