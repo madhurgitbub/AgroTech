@@ -101,7 +101,7 @@ The admin panel provides centralized control over the complete platform.
 
 # 🧠 System Architecture
 
-
+```text
                     🌾 FARMER
                        │
                        ▼
@@ -137,7 +137,7 @@ The admin panel provides centralized control over the complete platform.
               │ Orders          │
               │ Complaints      │
               └─────────────────┘
-
+```
 
 ---
 
@@ -175,6 +175,7 @@ The admin panel provides centralized control over the complete platform.
 
 # 📂 Project Structure
 
+```text
 AgroTech/
 │
 ├── index.html
@@ -216,13 +217,13 @@ AgroTech/
     ├── wishlist.html
     ├── notifications.html
     └── help.html
-
+```
 
 ---
 
 # 🔄 How The System Works
 
-
+```text
 User Registration
        ↓
 User Login
@@ -240,7 +241,7 @@ FastAPI Processes Request
 Supabase PostgreSQL
        ↓
 Response Returned to User
-
+```
 
 ---
 
@@ -261,7 +262,7 @@ AgroTech implements several security practices:
 
 # 📊 Major Modules
 
-
+```text
 ┌──────────────────────────────┐
 │       Authentication         │
 └──────────────┬───────────────┘
@@ -289,7 +290,7 @@ AgroTech implements several security practices:
 ┌──────────────────────────────┐
 │        Admin Panel           │
 └──────────────────────────────┘
-
+```
 
 ---
 
@@ -297,27 +298,27 @@ AgroTech implements several security practices:
 
 ## Step 1 — Setup Backend
 
-
+```bash
 cd backend
-
+```
 
 Create a virtual environment:
 
-
+```bash
 python -m venv venv
-
+```
 
 Activate it on Windows:
 
-
+```bash
 venv\Scripts\activate
-
+```
 
 Install dependencies:
 
-bash
+```bash
 pip install -r requirements.txt
-
+```
 
 ---
 
@@ -325,24 +326,26 @@ pip install -r requirements.txt
 
 Create:
 
-text
+```text
 backend/.env
-
+```
 
 Add your configuration:
 
-env
+```env
 SUPABASE_URL=your_supabase_url
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 JWT_SECRET=your_jwt_secret
 CORS_ORIGINS=http://127.0.0.1:5500
+```
 
 ---
 
 ## Step 3 — Start Backend
-bash
-python -m uvicorn main:app --reload --port 8000
 
+```bash
+python -m uvicorn main:app --reload --port 8000
+```
 
 FastAPI documentation will be available through the local API documentation interface.
 
@@ -350,8 +353,9 @@ FastAPI documentation will be available through the local API documentation inte
 
 ## Step 4 — Seed Database
 
+```bash
 python seed.py
-
+```
 
 This imports the sample AgroTech products into the database.
 
@@ -361,8 +365,9 @@ This imports the sample AgroTech products into the database.
 
 Open a new terminal in the project root:
 
+```bash
 python -m http.server 5500
-
+```
 
 Then open the application in your browser using the local development server.
 
@@ -434,7 +439,7 @@ Instead of managing different agricultural requirements through multiple offline
 
 ### Skills Used
 
-
+```text
 Python
 FastAPI
 HTML
@@ -445,12 +450,13 @@ PostgreSQL
 JWT
 Git
 GitHub
-
+```
 
 ---
 
 # ⭐ Project Highlights
 
+```text
 ✓ Full-Stack Web Application
 ✓ REST API Architecture
 ✓ Secure Authentication
@@ -463,7 +469,7 @@ GitHub
 ✓ Complaint Management
 ✓ Notification System
 ✓ Scalable Backend Architecture
-
+```
 
 ---
 
